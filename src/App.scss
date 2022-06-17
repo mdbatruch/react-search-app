@@ -1,7 +1,7 @@
 .App {
     text-align: center;
-    max-width: 500px;
-    margin: 40px auto;
+    // max-width: 500px;
+    padding: 40px;
   }
 
   .show {
@@ -18,10 +18,13 @@
   }
 
   .input-container {
-        position: relative;
-        input[type="text"] {
-            width: 100%;
-        }
+    position: relative;
+    input[type="text"] {
+        width: 100%;
+    }
+    &.popup {
+      padding: 0px 40px 30px;
+    }
   }
 
   .spinner {
@@ -38,6 +41,22 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.MuiModal-root {
+  .MuiBackdrop-root {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+  .MuiDrawer-paper {
+    margin-top: 50px;
+  }
+}
+
+.MuiPaper-root {
+  max-width: 500px;
+  margin: 0 auto;
+  overflow: inherit;
+  overflow-y: inherit !important;
 }
 
 #container {

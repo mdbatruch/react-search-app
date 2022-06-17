@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FaSpinner } from 'react-icons/fa'
+import Drawer from '@mui/material/Drawer';
 
       function Search() {
 
@@ -14,9 +15,14 @@ import { FaSpinner } from 'react-icons/fa'
         const [isLoaded, setIsLoaded] = useState(false);
         const [products, setProducts] = useState([]);
 
+        const [hasFocus, setFocus] = useState(false);
+
+        const [open, setOpen] = useState(false);
+
         const [q, setQ] = useState("");
 
         const [searchParam] = useState(["name"]);
+
 
         useEffect(() => {
             fetch(`${URL}/api/read.php`)
@@ -31,7 +37,9 @@ import { FaSpinner } from 'react-icons/fa'
                         setError(error);
                     }
                 );
+
         }, []);
+        
 
       function search(items) {
 
@@ -68,12 +76,14 @@ import { FaSpinner } from 'react-icons/fa'
         console.log(products)
           return (
             <form>
-                <div className="input-container">
-                    <input
-                        type="text"
-                        placeholder="Search for..."
-                        value={q}
-                        onChange={handleChange}
+              <Drawer open={open} anchor={"top"} onClose={() => setOpen(false)}>
+                <div className="input-container popup">
+                  <h3>Search for a product</h3>
+                  <input
+                      type="text"
+                      placeholder="Search for..."
+                      value={q}
+                      onChange={handleChange}
                     />
                     <FaSpinner icon="spinner" className={icon ? 'show spinner' : 'hide spinner'} />
                     <div id="container">
@@ -100,6 +110,18 @@ import { FaSpinner } from 'react-icons/fa'
                         )) : <div>No Results!</div>}
                       </ul>
                     </div>
+                    </div>
+              </Drawer>
+                <div className="input-container">
+                    <input
+                    style={{
+                          position: hasFocus ? "absolute" : "relative"
+                        }}
+                        type="text"
+                        placeholder="Search for..."
+                        onClick={() => setOpen(true)}
+                        onChange={handleChange}
+                    />
                 </div>
             </form>
           );
