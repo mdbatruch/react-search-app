@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FaSpinner } from 'react-icons/fa'
+import { FaSpinner, FaSearch } from 'react-icons/fa'
 import Drawer from '@mui/material/Drawer';
 
       function Search() {
@@ -12,6 +12,7 @@ import Drawer from '@mui/material/Drawer';
         const [error, setError] = useState(null);
         const [active, setIsActive] = useState(false);
         const [icon, setIcon] = useState(false);
+        const [searchIcon, setSearchIcon] = useState(true);
         const [isLoaded, setIsLoaded] = useState(false);
         const [products, setProducts] = useState([]);
 
@@ -38,7 +39,7 @@ import Drawer from '@mui/material/Drawer';
                     }
                 );
 
-        }, []);
+        }, [icon]);
         
 
       function search(items) {
@@ -61,11 +62,18 @@ import Drawer from '@mui/material/Drawer';
         setQ(e.target.value);
         setIsActive(true);
         setIcon(true);
+        setSearchIcon(false);
 
         if (e.target.value.length < 1) {
           setIsActive(false);
           setIcon(false);
+          setSearchIcon(true);
         }
+
+        const hideIcon = setTimeout(() => {
+          setIcon(false);
+          setSearchIcon(true);
+        }, 1500)
       }
 
       if (error) {
@@ -76,38 +84,40 @@ import Drawer from '@mui/material/Drawer';
         console.log(products)
           return (
             <form>
-              <Drawer open={open} anchor={"top"} onClose={() => setOpen(false)}>
+              <Drawer open={open} anchor={"top"} onClose={() => {setOpen(false); setQ(''); setIsActive(false); } }>
                 <div className="input-container popup">
                   <h3>Search for a product</h3>
-                  <input
-                      type="text"
-                      placeholder="Search for..."
-                      value={q}
-                      onChange={handleChange}
-                    />
-                    <FaSpinner icon="spinner" className={icon ? 'show spinner' : 'hide spinner'} />
+                  <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Enter keyword to search..."
+                        value={q}
+                        onChange={handleChange}
+                      />
+                    { searchIcon ? <FaSearch className="search-icon" /> : '' }
+                    { icon ? <FaSpinner icon="spinner" className="spinner" /> : '' }
+                  </div>
                     <div id="container">
                       <ul id="results" className={active ? 'show' : 'hide'} >
-                        {search(products).length > 0 ? search(products).map((item) => (
+                        {search(products).length > 0 ? search(products).map((item, index) => (
+                          <div key={index} className="product" id={item.id}>
                             <li>
-                              <span>{item.name}</span>
-                              <div class="img-container">
-                                <div class="image">
-                                    <img src={IMAGE_PATH + item.image} class="img-fluid" alt={item.name}/>
+                                <div className="img-container">
+                                  <div className="image">
+                                      <img src={IMAGE_PATH + item.image} className="img-fluid" alt={item.name}/>
+                                  </div>
                                 </div>
-                            </div>
-                              <div class="item-meta">
-                                <a href={PRODUCT_PATH + item.id} class='product-link title'>
-                                    <div class='name mb-1'>
-                                      {item.name}
-                                    </div>
-                                </a>
-                                <div class='mb-1 price'>
-                                    {item.price}
-                                </div>
-                            </div>
+                                <div className="item-meta">
+                                  <a href={PRODUCT_PATH + item.id} className='product-link title'>
+                                    <h2>{item.name}</h2>
+                                  </a>
+                                  <div className='mb-1 price'>
+                                      ${item.price}
+                                  </div>
+                              </div>
                             </li>
-                        )) : <div>No Results!</div>}
+                          </div>
+                        )) : <div className="no-results"><h3>Your search for: <b>{q}</b> did not match any products.</h3></div>}
                       </ul>
                     </div>
                     </div>
@@ -118,10 +128,11 @@ import Drawer from '@mui/material/Drawer';
                           position: hasFocus ? "absolute" : "relative"
                         }}
                         type="text"
-                        placeholder="Search for..."
+                        placeholder="Enter keyword to search..."
                         onClick={() => setOpen(true)}
                         onChange={handleChange}
                     />
+                    <FaSearch className="search-icon" />
                 </div>
             </form>
           );
