@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { FaSpinner, FaSearch } from 'react-icons/fa'
 import Drawer from '@mui/material/Drawer';
 
+require("dotenv").config();
+
       function Search() {
 
-        const URL = 'https://castlegames.mike-batruch.ca';
+        // console.log(process.env);
 
-        const IMAGE_PATH = 'https://castlegames.mike-batruch.ca/images/';
-        const PRODUCT_PATH = 'https://castlegames.mike-batruch.ca/product?id=';
+        const URL = process.env.REACT_APP_URL;
+
+        const IMAGE_PATH = process.env.REACT_APP_IMAGE_PATH;
+        const PRODUCT_PATH = process.env.REACT_APP_PRODUCT_PATH;
 
         const [error, setError] = useState(null);
         const [active, setIsActive] = useState(false);
@@ -81,7 +85,7 @@ import Drawer from '@mui/material/Drawer';
       } else if (!isLoaded) {
           return <>loading...</>;
       } else {
-        console.log(products)
+        // console.log(products)
           return (
             <form>
               <Drawer open={open} anchor={"top"} onClose={() => {setOpen(false); setQ(''); setIsActive(false); } }>
@@ -97,30 +101,30 @@ import Drawer from '@mui/material/Drawer';
                     { searchIcon ? <FaSearch className="search-icon" /> : '' }
                     { icon ? <FaSpinner icon="spinner" className="spinner" /> : '' }
                   </div>
-                    <div id="container">
-                      <ul id="results" className={active ? 'show' : 'hide'} >
-                        {search(products).length > 0 ? search(products).map((item, index) => (
-                          <div key={index} className="product" id={item.id}>
-                            <li>
-                                <div className="img-container">
-                                  <div className="image">
-                                      <img src={IMAGE_PATH + item.image} className="img-fluid" alt={item.name}/>
-                                  </div>
-                                </div>
-                                <div className="item-meta">
-                                  <a href={PRODUCT_PATH + item.id} className='product-link title'>
-                                    <h2>{item.name}</h2>
-                                  </a>
-                                  <div className='mb-1 price'>
-                                      ${item.price}
-                                  </div>
+                </div>
+                <div id="container">
+                  <ul id="results" className={active ? 'show' : 'hide'} >
+                    {search(products).length > 0 ? search(products).map((item, index) => (
+                      <div key={index} className="product" id={item.id}>
+                        <li>
+                            <div className="img-container">
+                              <div className="image">
+                                  <img src={IMAGE_PATH + item.image} className="img-fluid" alt={item.name}/>
                               </div>
-                            </li>
+                            </div>
+                            <div className="item-meta">
+                              <a href={PRODUCT_PATH + item.id} className='product-link title'>
+                                <h2>{item.name}</h2>
+                              </a>
+                              <div className='mb-1 price'>
+                                  ${item.price}
+                              </div>
                           </div>
-                        )) : <div className="no-results"><h3>Your search for: <b>{q}</b> did not match any products.</h3></div>}
-                      </ul>
-                    </div>
-                    </div>
+                        </li>
+                      </div>
+                    )) : <div className="no-results"><h3>Your search for: <b>{q}</b> did not match any products.</h3></div>}
+                  </ul>
+                </div>
               </Drawer>
                 <div className="input-container">
                     <input
